@@ -175,12 +175,13 @@
       let code = genCode();
       let exists = (await fb.db.doc('lifetag_tags/' + code).get()).exists;
       while (exists) { code = genCode(); exists = (await fb.db.doc('lifetag_tags/' + code).get()).exists; }
-      const batch = fb.db.batch();
-      batch.set(fb.db.doc('lifetag_tags/' + code), Object.assign(pickPublic(data), {
+      // Sequential, NOT a batch: the contacts rule checks ownership via a
+      // get() on the tag document, and rules evaluate get() against the
+      // committed database, so the tag must exist before contacts are written.
+      await fb.db.doc('lifetag_tags/' + code).set(Object.assign(pickPublic(data), {
         ownerUid: uid, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now()
       }));
-      batch.set(fb.db.doc('lifetag_contacts/' + code), { contacts: data.contacts || [] });
-      await batch.commit();
+      await fb.db.doc('lifetag_contacts/' + code).set({ contacts: data.contacts || [] });
       localStorage.setItem(codeCacheKey(uid), code);
       const tag = await this.getTag(code);
       return { profile: Object.assign({}, data, { id: uid }), tag };
@@ -261,14 +262,14 @@
       const user = await this.currentUser();
       const old = od.tag.code;
       const code = genCode();
-      const batch = fb.db.batch();
-      batch.set(fb.db.doc('lifetag_tags/' + code), Object.assign(pickPublic(od.profile), {
+      // Sequential for the same reason as createAccount: tag first, then
+      // contacts, then remove the old pair.
+      await fb.db.doc('lifetag_tags/' + code).set(Object.assign(pickPublic(od.profile), {
         ownerUid: user.uid, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now()
       }));
-      batch.set(fb.db.doc('lifetag_contacts/' + code), { contacts: od.profile.contacts || [] });
-      batch.delete(fb.db.doc('lifetag_tags/' + old));
-      batch.delete(fb.db.doc('lifetag_contacts/' + old));
-      await batch.commit();
+      await fb.db.doc('lifetag_contacts/' + code).set({ contacts: od.profile.contacts || [] });
+      await fb.db.doc('lifetag_contacts/' + old).delete().catch(() => {});
+      await fb.db.doc('lifetag_tags/' + old).delete().catch(() => {});
       localStorage.setItem(codeCacheKey(user.uid), code);
       return this.getTag(code);
     },
