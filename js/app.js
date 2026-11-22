@@ -77,7 +77,6 @@
         ['What if my helmet is stolen?', 'Deactivate the tag in one tap, or regenerate the code. The old sticker stops working immediately.'],
         ['Is ResQ a replacement for the ambulance service?', 'No. ResQ only helps identify you and reach your family in the first minutes. Always call 1122 first.']
       ].map(q => `<details class="risk"><summary>${esc(q[0])}</summary><p>${esc(q[1])}</p></details>`).join('')}
-      <div class="stripe"></div>
       <p class="center"><a href="#/safety">How ResQ stays safe</a> · <a href="#/privacy">Privacy</a> · <a href="#/judges">For judges</a></p>`;
   }
 
