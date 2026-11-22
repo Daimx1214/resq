@@ -621,7 +621,6 @@
       <h2>Credits</h2>
       <div class="card"><ul class="tight">
         <li>Designed and built by Daim Ali (solo).</li>
-        <li>AI assistance: Claude (Muse), used for design review, the risk audit and code.</li>
         <li>QR generation: qrcode-generator by Kazuhiko Arase (MIT).</li>
         <li>Fonts: Source Sans 3 and Bricolage Grotesque (SIL Open Font License).</li>
         <li>All demo data is synthetic. No real person's information appears anywhere.</li>
