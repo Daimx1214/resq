@@ -38,7 +38,7 @@
       const profile = Object.assign({}, data, { id, pinHash: await hashPin(pin, id), createdAt: Date.now() });
       profiles.push(profile); lwrite(LK.profiles, profiles);
       const tags = lread(LK.tags, []);
-      const tag = { code: genCode(), profileId: id, status: 'active', todayRider: null, informedAt: null, createdAt: Date.now() };
+      const tag = { code: genCode(), profileId: id, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now() };
       tags.push(tag); lwrite(LK.tags, tags);
       localStorage.setItem(LK.session, id);
       return { profile, tag };
@@ -68,7 +68,30 @@
       const tag = lread(LK.tags, []).find(x => x.code === String(code || '').toUpperCase());
       if (!tag) return [];
       const profile = this.listLocalProfiles().find(x => x.id === tag.profileId);
-      return profile ? profile.contacts : [];
+      if (!profile) return [];
+      const map = lread('lt.consent.v1', {});
+      return profile.contacts.map(c => {
+        if (c.consentToken && map[c.consentToken]) return Object.assign({}, c, { consent: map[c.consentToken].status });
+        return c;
+      });
+    },
+    async createConsent(code, contactIndex, ownerFirstName, contactName) {
+      const token = genCode() + genCode();
+      const map = lread('lt.consent.v1', {});
+      map[token] = { code, contactIndex, ownerFirstName, contactName, status: 'pending', createdAt: Date.now() };
+      lwrite('lt.consent.v1', map);
+      return token;
+    },
+    async getConsent(token) {
+      const map = lread('lt.consent.v1', {});
+      return map[token] ? Object.assign({ token }, map[token]) : null;
+    },
+    async decideConsent(token, decision) {
+      const map = lread('lt.consent.v1', {});
+      if (!map[token]) return null;
+      map[token] = Object.assign({}, map[token], { status: decision, decidedAt: Date.now() });
+      lwrite('lt.consent.v1', map);
+      return map[token];
     },
     async updateTag(code, data) {
       const tags = lread(LK.tags, []);
@@ -89,7 +112,7 @@
       const od = await this.ownerData();
       if (!od) return null;
       const tags = lread(LK.tags, []).filter(x => x.profileId !== od.profile.id);
-      const tag = { code: genCode(), profileId: od.profile.id, status: 'active', todayRider: null, informedAt: null, createdAt: Date.now() };
+      const tag = { code: genCode(), profileId: od.profile.id, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now() };
       tags.push(tag); lwrite(LK.tags, tags);
       return tag;
     },
@@ -152,7 +175,7 @@
       while (exists) { code = genCode(); exists = (await fb.db.doc('lifetag_tags/' + code).get()).exists; }
       const batch = fb.db.batch();
       batch.set(fb.db.doc('lifetag_tags/' + code), Object.assign(pickPublic(data), {
-        ownerUid: uid, status: 'active', todayRider: null, informedAt: null, createdAt: Date.now()
+        ownerUid: uid, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now()
       }));
       batch.set(fb.db.doc('lifetag_contacts/' + code), { contacts: data.contacts || [] });
       await batch.commit();
@@ -192,7 +215,32 @@
     },
     async getContacts(code) {
       const snap = await fb.db.doc('lifetag_contacts/' + String(code || '').toUpperCase()).get();
-      return snap.exists ? (snap.data().contacts || []) : [];
+      const contacts = snap.exists ? (snap.data().contacts || []) : [];
+      // The consent record is authoritative when a consent link exists.
+      for (const c of contacts) {
+        if (c.consentToken) {
+          const rec = await this.getConsent(c.consentToken).catch(() => null);
+          if (rec) c.consent = rec.status;
+        }
+      }
+      return contacts;
+    },
+    async createConsent(code, contactIndex, ownerFirstName, contactName) {
+      const user = await this.currentUser();
+      const token = genCode() + genCode();
+      await fb.db.doc('lifetag_consent/' + token).set({
+        code, contactIndex, ownerUid: user.uid, ownerFirstName, contactName,
+        status: 'pending', createdAt: Date.now()
+      });
+      return token;
+    },
+    async getConsent(token) {
+      const snap = await fb.db.doc('lifetag_consent/' + token).get();
+      return snap.exists ? Object.assign({ token: snap.id }, snap.data()) : null;
+    },
+    async decideConsent(token, decision) {
+      await fb.db.doc('lifetag_consent/' + token).update({ status: decision, decidedAt: Date.now() });
+      return this.getConsent(token);
     },
     async updateTag(code, data) {
       await fb.db.doc('lifetag_tags/' + code).update(data);
@@ -213,7 +261,7 @@
       const code = genCode();
       const batch = fb.db.batch();
       batch.set(fb.db.doc('lifetag_tags/' + code), Object.assign(pickPublic(od.profile), {
-        ownerUid: user.uid, status: 'active', todayRider: null, informedAt: null, createdAt: Date.now()
+        ownerUid: user.uid, status: 'active', todayRider: null, informedAt: null, reportCount: 0, lastReportAt: null, createdAt: Date.now()
       }));
       batch.set(fb.db.doc('lifetag_contacts/' + code), { contacts: od.profile.contacts || [] });
       batch.delete(fb.db.doc('lifetag_tags/' + old));
@@ -267,7 +315,8 @@
   };
   ['createAccount', 'unlock', 'ownerData', 'getTag', 'getContacts', 'updateTag',
    'saveProfile', 'regenerate', 'logScan', 'scansForOwner', 'exportData',
-   'deleteEverything', 'signOut', 'listLocalProfiles', 'verifyCode', 'currentUser', 'cachedCode'
+   'deleteEverything', 'signOut', 'listLocalProfiles', 'verifyCode', 'currentUser', 'cachedCode',
+   'createConsent', 'getConsent', 'decideConsent'
   ].forEach(name => {
     Store[name] = function () {
       const impl = active[name];

@@ -44,7 +44,16 @@
       rider_today: 'Riding today (not the owner)',
       tag_revoked: 'This tag was deactivated by its owner. It no longer shows any information.',
       tag_notfound: 'This tag was not found. If someone is hurt, call 1122 now.',
-      voice_text: 'Do not panic. First call 1122. Do not move the injured person. Do not remove the helmet. The family contact buttons are below.'
+      voice_text: 'Do not panic. First call 1122. Do not move the injured person. Do not remove the helmet. The family contact buttons are below.',
+      consent_heading: 'Emergency contact request',
+      consent_explain: 'wants to list you as a family emergency contact on ResQ, the helmet sticker that helps strangers reach family after an accident.',
+      consent_points: 'Your number is never printed on the sticker and never shown on screen. It is only used so a bystander can call you after confirming a real emergency. You can decline now, or come back to this same link later to remove your number.',
+      consent_accept: 'Yes, I agree',
+      consent_decline: 'No, decline',
+      consent_revoke: 'Remove my number',
+      consent_thanks: 'Thank you. Your answer has been saved.',
+      consent_notfound: 'This consent link is not valid.',
+      consent_status: 'Current status'
     },
     ur: {
       hero_title: 'Hadse ki surat mein, scan karo',
@@ -88,7 +97,16 @@
       rider_today: 'Aaj ka sawaar (malik nahi hai)',
       tag_revoked: 'Ye tag malik ne band kar diya hai. Ab ye koi maloomat nahi dikhata.',
       tag_notfound: 'Ye tag nahi mila. Agar koi zakhmi hai to abhi 1122 ko call karen.',
-      voice_text: 'Ghabrayen nahi. Pehle 1122 ko call karen. Zakhmi ko na hilayen. Helmet na utaren. Khandan ko call karne ke button neeche hain.'
+      voice_text: 'Ghabrayen nahi. Pehle 1122 ko call karen. Zakhmi ko na hilayen. Helmet na utaren. Khandan ko call karne ke button neeche hain.',
+      consent_heading: 'Emergency contact ki darkhwast',
+      consent_explain: 'aap ko ResQ par apna khandani emergency contact banana chahta hai. ResQ wo helmet sticker hai jo hadse ke baad ajnabiyon ko khandan tak pahunchne mein madad karta hai.',
+      consent_points: 'Aap ka number sticker par kabhi nahi chhapta aur screen par kabhi nazar nahi ata. Ye sirf is liye istemal hota hai ke hadse ki surat mein koi madadgar asal emergency ki tasdeeq ke baad aap ko call kar sake. Aap abhi inkaar kar sakte hain, ya baad mein isi link se apna number hata sakte hain.',
+      consent_accept: 'Haan, mujhe manzoor hai',
+      consent_decline: 'Nahi, inkaar hai',
+      consent_revoke: 'Mera number hata dein',
+      consent_thanks: 'Shukriya. Aap ka jawab mehfooz ho gaya hai.',
+      consent_notfound: 'Ye consent link durust nahi hai.',
+      consent_status: 'Maujooda halat'
     }
   };
   let lang = localStorage.getItem('lt.lang') || 'en';

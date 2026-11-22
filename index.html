@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ResQ — In case of accident, scan me</title>
 <meta name="description" content="ResQ is a QR emergency tag for your helmet or vehicle. If you are hurt and cannot speak, any bystander can scan it to see your blood group and reach your family. Your phone number is never printed and never shown.">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -15,8 +16,10 @@
 </header>
 <main class="wrap" id="app" aria-live="polite"></main>
 <footer class="foot">
+  <div class="stripe"></div>
   <p>ResQ is a prototype built for SafeSpace Hacks 2026. It is not a replacement for emergency services. In an emergency, call <b>1122</b> (Pakistan) or your local emergency number first.</p>
-  <p><a href="#/about">How it works, and the risks we found</a></p>
+  <p><a href="#/about">How it works, and the risks we found</a> · <a href="#/safety">Safety</a> · <a href="#/privacy">Privacy</a> · <a href="#/judges">For judges</a></p>
+  <p>Built with AI assistance from Claude (Muse). QR library MIT licensed. Demo data is synthetic.</p>
 </footer>
 <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }</script>
 <script src="js/qrcode.js"></script>

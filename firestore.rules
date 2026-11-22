@@ -70,7 +70,32 @@ service cloud.firestore {
       allow list: if false;
       allow create: if isSignedIn()
         && request.resource.data.ownerUid == request.auth.uid;
-      allow update, delete: if isSignedIn()
+      allow update: if (isSignedIn()
+          && resource.data.ownerUid == request.auth.uid)
+        || request.resource.data.diff(resource.data)
+             .affectedKeys().hasOnly(['informedAt'])
+        || (request.resource.data.diff(resource.data)
+             .affectedKeys().hasOnly(['reportCount', 'lastReportAt'])
+          && request.resource.data.reportCount
+             == resource.data.get('reportCount', 0) + 1);
+      allow delete: if isSignedIn()
+        && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Consent records: created by the owner, readable by anyone who
+    // holds the unguessable token (the link IS the credential), and
+    // updatable by anyone only in the status/decidedAt fields, so the
+    // contact can accept, decline or revoke from the link.
+    match /lifetag_consent/{token} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isSignedIn()
+        && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if request.resource.data.diff(resource.data)
+            .affectedKeys().hasOnly(['status', 'decidedAt'])
+        && request.resource.data.status
+            in ['confirmed', 'declined', 'revoked'];
+      allow delete: if isSignedIn()
         && resource.data.ownerUid == request.auth.uid;
     }
 

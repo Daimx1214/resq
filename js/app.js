@@ -2,6 +2,8 @@
 // and the public bystander scan flow at #/t/CODE. All data via Store.
 (function () {
   const app = document.getElementById('app');
+  // Judges' demo tag (synthetic data). Filled in once the demo tag exists.
+  const DEMO_CODE = '';
   const BLOOD = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Not known'];
   const t = k => window.I18N.t(k);
 
@@ -43,14 +45,40 @@
           <li>${esc(t('hero_point3'))}</li>
         </ul>
       </div>
-      <a class="btn btn-primary" href="#/create">${esc(t('cta_create'))}</a>
+      <a class="btn btn-rescue" href="#/create">${esc(t('cta_create'))}</a>
       <a class="btn" href="#/login">${esc(t('cta_have'))}</a>
       <h2>${esc(t('how_title'))}</h2>
       <div class="card">
         <p>1. ${esc(t('how_1'))}</p>
         <p>2. ${esc(t('how_2'))}</p>
         <p>3. ${esc(t('how_3'))}</p>
-      </div>`;
+      </div>
+      <h2>What is on the sticker, and what is never on it</h2>
+      <div class="vs-grid">
+        <div class="vs-yes"><b>On the sticker</b>
+          <ul class="tight"><li>The QR code</li><li>First name</li><li>Blood group</li></ul>
+          <p class="small">That is all. It works with no internet and no server.</p></div>
+        <div class="vs-no"><b>Never on the sticker</b>
+          <ul class="tight"><li>Phone numbers</li><li>CNIC / national ID</li><li>Home address</li></ul>
+          <p class="small">A photograph of the sticker gives a scammer nothing they can use.</p></div>
+      </div>
+      ${DEMO_CODE ? `<h2>Try the demo tag</h2>
+      <div class="card center">
+        <p>Scan this demo tag with your phone, exactly as a bystander would. The rider "Ahmed" is not real; all demo data is synthetic.</p>
+        <div class="qr-box">${qrSvg(baseUrl() + '#/t/' + DEMO_CODE, 5)}</div>
+        <a class="btn btn-primary" href="#/t/${DEMO_CODE}">Open the demo scan page</a>
+      </div>` : ''}
+      <h2>Common questions</h2>
+      ${[
+        ['Does the sticker show my family\'s phone numbers?', 'No. Numbers are never printed and never shown as text on the scan page. They are stored separately and used only for the call buttons after a bystander confirms a real emergency.'],
+        ['What if I do not know my blood group?', 'Choose "Not known". A wrong group is more dangerous than none, and the scan page always says the group is self-reported and must be tested before a transfusion.'],
+        ['What if someone scans my tag as a joke?', 'They first meet a gate asking if it is a real emergency, and every scan is logged for you to see. Repeated "just looking" scans lock the tag down: the emergency path then needs a 3-second hold, and only the blood group and 1122 stay visible.'],
+        ['Someone else rides my bike. What then?', 'Set "today\'s rider" in your dashboard. The tag shows their name and blood group until the time you choose ends.'],
+        ['What if my helmet is stolen?', 'Deactivate the tag in one tap, or regenerate the code. The old sticker stops working immediately.'],
+        ['Is ResQ a replacement for the ambulance service?', 'No. ResQ only helps identify you and reach your family in the first minutes. Always call 1122 first.']
+      ].map(q => `<details class="risk"><summary>${esc(q[0])}</summary><p>${esc(q[1])}</p></details>`).join('')}
+      <div class="stripe"></div>
+      <p class="center"><a href="#/safety">How ResQ stays safe</a> · <a href="#/privacy">Privacy</a> · <a href="#/judges">For judges</a></p>`;
   }
 
   // ---------------- Create / edit profile ----------------
@@ -224,11 +252,17 @@
       </div>
       <div class="card">
         <h2 style="margin-top:0">Family contacts</h2>
-        ${p.contacts.map((c, i) => `<div class="kv"><span>${esc(c.name)} (${esc(c.relation || 'family')})</span>
+        ${p.contacts.map((c, i) => {
+          const consentUrl = c.consentToken ? baseUrl() + '#/consent/' + c.consentToken : '';
+          return `<div class="kv"><span>${esc(c.name)} (${esc(c.relation || 'family')})</span>
           <b><span class="pill ${c.consent === 'confirmed' ? 'pill-active' : 'pill-pending'}">${esc(c.consent)}</span></b></div>
-          ${c.consent !== 'confirmed' ? `<a class="btn btn-small" target="_blank" rel="noopener" href="https://wa.me/${esc(c.phone.replace(/[^0-9]/g, ''))}?text=${encodeURIComponent('Assalam-o-Alaikum, I am adding your number as my ResQ emergency contact. If I am in an accident, a bystander can reach you through my helmet sticker. Your number is never shown publicly. Please reply YES if you agree.')}">Ask on WhatsApp</a>
-          <button class="btn btn-small" data-confirm="${i}">They agreed: mark confirmed</button>` : ''}`).join('')}
-        <p class="hint">A contact only becomes reachable after they agree. That is their privacy right, and it also proves the number is real.</p>
+          ${c.consent !== 'confirmed' ? (c.consentToken
+            ? `<a class="btn btn-small" target="_blank" rel="noopener" href="https://wa.me/${esc(c.phone.replace(/[^0-9]/g, ''))}?text=${encodeURIComponent('Assalam-o-Alaikum, I am adding you as my ResQ emergency contact. Please open this link and tap "Yes, I agree": ' + consentUrl + ' Your number is never shown publicly.')}">Send consent link on WhatsApp</a>
+               <button class="btn btn-small" data-copylink="${esc(consentUrl)}">Copy consent link</button>`
+            : `<button class="btn btn-small" data-makelink="${i}">Create consent link for ${esc(c.name)}</button>
+               <button class="btn btn-small" data-confirm="${i}">They agreed in person: mark confirmed</button>`) : ''}`;
+        }).join('')}
+        <p class="hint">A contact only becomes reachable after they agree, ideally through their own consent link. That is their privacy right, and it also proves the number is real.</p>
       </div>
       <div class="card">
         <h2 style="margin-top:0">Someone else riding today?</h2>
@@ -262,6 +296,21 @@
       contacts[Number(btn.getAttribute('data-confirm'))].consent = 'confirmed';
       await Store.saveProfile(Object.assign({}, p, { contacts }));
       dashboard();
+    }));
+    app.querySelectorAll('[data-makelink]').forEach(btn => btn.addEventListener('click', async () => {
+      const i = Number(btn.getAttribute('data-makelink'));
+      try {
+        const token = await Store.createConsent(tag.code, i, p.firstName, p.contacts[i].name);
+        const contacts = p.contacts.slice();
+        contacts[i] = Object.assign({}, contacts[i], { consentToken: token, consent: 'pending' });
+        await Store.saveProfile(Object.assign({}, p, { contacts }));
+        dashboard();
+      } catch (e) { alert('Could not create the link: ' + errText(e)); }
+    }));
+    app.querySelectorAll('[data-copylink]').forEach(btn => btn.addEventListener('click', async () => {
+      const url = btn.getAttribute('data-copylink');
+      try { await navigator.clipboard.writeText(url); btn.textContent = 'Copied'; }
+      catch (e) { prompt('Copy this link:', url); }
     }));
     const rf = document.getElementById('riderForm');
     rf.addEventListener('submit', async ev => {
@@ -307,8 +356,10 @@
       <h1 class="no-print">Your sticker</h1>
       <p class="no-print">Print this page and cut out the sticker. Put it on the side of your helmet, or on the vehicle where a helper will see it.</p>
       <div class="sticker">
-        <div class="s-title">IN CASE OF ACCIDENT — SCAN ME</div>
-        <div class="urdu" dir="rtl" style="font-size:17px">حادثے کی صورت میں اسکین کریں — زندگی بچائیں</div>
+        <div class="s-band">
+          <div class="s-title">IN CASE OF ACCIDENT — SCAN ME</div>
+          <div class="urdu" dir="rtl" style="font-size:17px;line-height:1.9">حادثے کی صورت میں اسکین کریں — زندگی بچائیں</div>
+        </div>
         <div class="qr-box">${qrSvg(tagPayload(tag, p), 6)}</div>
         <div class="s-name">${esc(rider.name)}</div>
         <div class="s-blood">Blood: ${esc(rider.bloodGroup || 'Not known')}</div>
@@ -331,19 +382,21 @@
       app.innerHTML = `<div class="scan-hero"><div class="cross">✚</div><h1>ResQ</h1></div><div class="warn">${esc(t('tag_revoked'))}</div><a class="btn btn-emergency" href="tel:1122">${esc(t('call_ambulance'))}</a>`;
       return;
     }
-    // Per-device soft lockdown in cloud mode (the log is owner-only there);
-    // local mode counts real views for this tag.
-    let locked = false;
+    // Lockdown has two triggers: the server-side counter (3 "just looking"
+    // reports in 24 hours, set on the tag itself) and a per-device counter.
+    const serverLocked = (tag.reportCount || 0) >= 3 && (Date.now() - (tag.lastReportAt || 0) < 24 * 3600 * 1000);
+    let deviceLocked = false;
     if (Store.mode === 'local') {
       const recent = (await Store.scansForOwner(tag.code)).filter(s => Date.now() - s.at < 3600 * 1000 && s.kind === 'view').length;
-      locked = recent >= 8;
+      deviceLocked = recent >= 8;
     } else {
       const key = 'lt.views.' + tag.code;
       const views = JSON.parse(localStorage.getItem(key) || '[]').filter(ts => Date.now() - ts < 3600 * 1000);
       views.push(Date.now());
       localStorage.setItem(key, JSON.stringify(views));
-      locked = views.length > 8;
+      deviceLocked = views.length > 8;
     }
+    const locked = serverLocked || deviceLocked;
     Store.logScan(tag.code, 'view', '', tag.ownerUid || '').catch(() => {});
     app.innerHTML = `
       <div class="scan-hero"><div class="cross">✚</div><h1>${esc(t('gate_title'))}</h1></div>
@@ -358,14 +411,28 @@
       </div>
       <a class="btn btn-emergency" href="tel:1122">${esc(t('call_ambulance'))}</a>`;
     document.getElementById('gateNo').addEventListener('click', () => {
+      Store.updateTag(tag.code, { reportCount: (tag.reportCount || 0) + 1, lastReportAt: Date.now() }).catch(() => {});
+      Store.logScan(tag.code, 'not_emergency', '', tag.ownerUid || '').catch(() => {});
       app.innerHTML = `<div class="scan-hero"><div class="cross">✚</div><h1>ResQ</h1></div>
         <div class="card"><h2 style="margin-top:0">${esc(t('looking_title'))}</h2><p>${esc(t('looking_body'))}</p></div>
         <a class="btn" href="#/t/${esc(tag.code)}">Back</a>`;
     });
-    document.getElementById('gateYes').addEventListener('click', async () => {
+    const yesBtn = document.getElementById('gateYes');
+    const goEmergency = () => {
       const phone = document.getElementById('scannerPhone').value.trim();
       emergencyView(tag, phone, locked);
-    });
+    };
+    if (locked) {
+      // In lockdown the emergency path needs a deliberate 3-second hold,
+      // which stops casual misuse without ever blocking a real emergency.
+      yesBtn.textContent = 'Hold for 3 seconds if this is a real emergency';
+      let holdTimer = null;
+      yesBtn.addEventListener('pointerdown', () => { holdTimer = setTimeout(goEmergency, 3000); });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(evName =>
+        yesBtn.addEventListener(evName, () => { if (holdTimer) clearTimeout(holdTimer); }));
+    } else {
+      yesBtn.addEventListener('click', goEmergency);
+    }
   }
 
   async function emergencyView(tag, scannerPhone, locked) {
@@ -415,13 +482,132 @@
       ${pendingNote}
       <p class="small center">Numbers are never shown on this screen. Calls connect directly from these buttons.</p>`;
     document.getElementById('listenBtn').addEventListener('click', () => {
-      try {
-        const u = new SpeechSynthesisUtterance(t('voice_text'));
-        u.lang = window.I18N.lang === 'ur' ? 'ur-PK' : 'en-US';
-        speechSynthesis.cancel();
-        speechSynthesis.speak(u);
-      } catch (e) { /* TTS not available on this device */ }
+      // Recorded audio first: many phones have no Urdu TTS voice at all.
+      const lang = window.I18N.lang === 'ur' ? 'ur' : 'en';
+      const audio = new Audio('audio/guide-' + lang + '.mp3');
+      audio.play().catch(() => {
+        try {
+          const u = new SpeechSynthesisUtterance(t('voice_text'));
+          u.lang = window.I18N.lang === 'ur' ? 'ur-PK' : 'en-US';
+          speechSynthesis.cancel();
+          speechSynthesis.speak(u);
+        } catch (e) { /* no audio available on this device */ }
+      });
     });
+  }
+
+  // ---------------- Consent page (family contact decides) ----------------
+  async function consentPage(token) {
+    loading();
+    let rec = null;
+    try { rec = await Store.getConsent(token); } catch (e) { rec = null; }
+    if (!rec) {
+      app.innerHTML = `<div class="scan-hero"><div class="cross">✚</div><h1>ResQ</h1></div>
+        <div class="danger-note">${esc(t('consent_notfound'))}</div>
+        <a class="btn btn-emergency" href="tel:1122">${esc(t('call_ambulance'))}</a>`;
+      return;
+    }
+    const statusPill = `<span class="pill ${rec.status === 'confirmed' ? 'pill-active' : 'pill-pending'}">${esc(rec.status)}</span>`;
+    app.innerHTML = `
+      <div class="scan-hero"><div class="cross">✚</div><h1>${esc(t('consent_heading'))}</h1></div>
+      <div class="card">
+        <p><b>${esc(rec.ownerFirstName)}</b> ${esc(t('consent_explain'))}</p>
+        <p>${esc(t('consent_points'))}</p>
+        <div class="kv"><span>${esc(t('consent_status'))}</span><b>${statusPill}</b></div>
+      </div>
+      ${rec.status === 'confirmed'
+        ? `<button class="btn" id="revokeBtn2">${esc(t('consent_revoke'))}</button>`
+        : `<button class="btn btn-green" id="acceptBtn">${esc(t('consent_accept'))}</button>
+           <button class="btn" id="declineBtn">${esc(t('consent_decline'))}</button>`}
+      <p class="small center">ResQ · SafeSpace Hacks 2026 prototype</p>`;
+    const decide = async decision => {
+      try { await Store.decideConsent(token, decision); } catch (e) { alert(errText(e)); return; }
+      app.innerHTML = `
+        <div class="scan-hero"><div class="cross">✚</div><h1>ResQ</h1></div>
+        <div class="ok-note">${esc(t('consent_thanks'))}</div>
+        <div class="card"><div class="kv"><span>${esc(t('consent_status'))}</span><b>${esc(decision)}</b></div>
+        <p class="small">You can change your answer any time by opening this same link again.</p></div>`;
+    };
+    const acc = document.getElementById('acceptBtn');
+    if (acc) acc.addEventListener('click', () => decide('confirmed'));
+    const dec = document.getElementById('declineBtn');
+    if (dec) dec.addEventListener('click', () => decide('declined'));
+    const rev = document.getElementById('revokeBtn2');
+    if (rev) rev.addEventListener('click', () => decide('revoked'));
+  }
+
+  // ---------------- Safety / Privacy / Judges pages ----------------
+  function safetyPage() {
+    app.innerHTML = `
+      <h1>How ResQ stays safe</h1>
+      <p class="lede">ResQ was designed by attacking it first. We wrote down 40 ways the idea could fail or be misused, then designed against each one. The full list is on the <a href="#/about">About page</a>. This page explains the machinery.</p>
+      <h2>Three separate records, on purpose</h2>
+      <div class="card"><b>1. The public tag record.</b> First name, blood group, allergies, conditions, medicines, note. Readable only by someone who has the tag's random 12-character code. There is no list of tags anywhere, so nothing can be browsed or scraped in bulk.</div>
+      <div class="card"><b>2. The contacts record.</b> Family names and phone numbers live in a different record, fetched only after a bystander passes the emergency gate. Numbers are never displayed as text, and a contact is reachable only after they personally accept through their own consent link.</div>
+      <div class="card"><b>3. The scan log.</b> Every view, "just looking" report and emergency is appended to a log that only the owner can read. Nobody, including the owner, can edit or delete individual entries.</div>
+      <h2>The gate and the lockdown</h2>
+      <div class="card">
+        <p>Scanning shows nothing private. The bystander must first confirm a real emergency, and is told the scan is reported. Three "just looking" reports in 24 hours put the tag into lockdown: the emergency path then needs a deliberate 3-second hold, and medical details beyond blood group are hidden. The 1122 button and the name and blood group inside the QR are never blocked, for anyone, ever.</p>
+      </div>
+      <h2>What we could not fully solve, stated plainly</h2>
+      <div class="warn">A determined technical attacker who already knows a tag code could query the database directly for the contacts record. The production fix is a calling relay so numbers never leave the server; that needs paid telephony and is a roadmap item, not a claim. Bystanders may still choose not to scan. A self-reported blood group may still be wrong, which is why the page orders a test before any transfusion.</div>
+      <a class="btn" href="#/">Back to home</a>`;
+  }
+
+  function privacyPage() {
+    app.innerHTML = `
+      <h1>Privacy, in plain words</h1>
+      <h2>What ResQ stores</h2>
+      <div class="card"><ul class="tight">
+        <li>Your first name and blood group</li>
+        <li>Allergies, conditions and regular medicines, if you provide them</li>
+        <li>Up to two family contacts: name, relation, phone number, and whether they agreed</li>
+        <li>A log of scans of your tag</li>
+        <li>Your email address, for signing in</li>
+      </ul></div>
+      <h2>What ResQ never asks for</h2>
+      <div class="card"><ul class="tight">
+        <li>No CNIC or national ID number</li>
+        <li>No home address</li>
+        <li>No location tracking, ever</li>
+        <li>No contacts from your phone book</li>
+      </ul></div>
+      <h2>Who can see what</h2>
+      <div class="card">
+        <p>Anyone holding your sticker can see your first name and blood group; they are printed in the QR itself so they work offline. Medical details appear only after the emergency gate. Family numbers are never displayed; they only power call buttons, and only for contacts who accepted their consent link. Only you can see your scan log.</p>
+      </div>
+      <h2>Your controls</h2>
+      <div class="card">
+        <p>From your dashboard you can edit everything, deactivate your tag, regenerate its code, download all of your data as a file, and delete everything permanently. Family contacts can decline or revoke their consent at any time from their own link, without asking you.</p>
+      </div>
+      <a class="btn" href="#/">Back to home</a>`;
+  }
+
+  function judgesPage() {
+    app.innerHTML = `
+      <h1>For the SafeSpace Hacks judges</h1>
+      <p class="lede">ResQ is a QR emergency tag for motorcycle helmets and vehicles, built solo for SafeSpace Hacks 2026. This page collects everything needed to evaluate it in a few minutes.</p>
+      ${DEMO_CODE ? `<h2>Try it yourself (2 minutes)</h2>
+      <div class="card center">
+        <p>Scan the demo tag, or open it here. Rider "Ahmed, B+" is synthetic. Pass the gate as a bystander would, listen to the Urdu guidance, and notice that no phone number ever appears on screen.</p>
+        <div class="qr-box">${qrSvg(baseUrl() + '#/t/' + DEMO_CODE, 5)}</div>
+        <a class="btn btn-rescue" href="#/t/${DEMO_CODE}">Open the demo scan page</a>
+      </div>` : ''}
+      <h2>One safer outcome</h2>
+      <div class="card"><p>A rider is knocked unconscious at night. Today: his phone is locked, nobody knows his blood group or who to call, and the hospital loses the golden hour to identification. With ResQ: a bystander scans the helmet sticker, sees B+ and a penicillin allergy in seconds, calls 1122 with the location, and reaches his sister through a button, without her number ever being exposed. The family learns within minutes, from a person who was there, that a help request came from his tag.</p></div>
+      <h2>One honest limitation</h2>
+      <div class="card"><p>ResQ cannot make a bystander scan. The sticker teaches in two languages and the page speaks Urdu aloud, but willingness to help is a social problem software can only lower the cost of, not solve. The full risk audit and the remaining technical limitations are on the <a href="#/safety">Safety page</a>.</p></div>
+      <h2>What was built for this event</h2>
+      <div class="card"><p>The idea, the 40-point risk audit, the hardened design, and this working product (accounts, consent links, scan log, lockdown, recorded Urdu audio, bilingual interface) were all created during the SafeSpace Hacks window. The only pre-existing piece is the vendored MIT-licensed QR library, credited below.</p></div>
+      <h2>Credits</h2>
+      <div class="card"><ul class="tight">
+        <li>Designed and built by Daim Ali (solo).</li>
+        <li>AI assistance: Claude (Muse), used for design review, the risk audit and code.</li>
+        <li>QR generation: qrcode-generator by Kazuhiko Arase (MIT).</li>
+        <li>Fonts: Source Sans 3 and Bricolage Grotesque (SIL Open Font License).</li>
+        <li>All demo data is synthetic. No real person's information appears anywhere.</li>
+      </ul></div>
+      <a class="btn" href="#/">Back to home</a>`;
   }
 
   // ---------------- About: how it works + risks we found ----------------
@@ -458,6 +644,7 @@
     const hash = location.hash || '#/';
     document.documentElement.lang = window.I18N.lang === 'ur' ? 'ur' : 'en';
     if (hash.startsWith('#/t/')) scanPage(hash.slice(4));
+    else if (hash.startsWith('#/consent/')) consentPage(hash.slice(10));
     else if (hash === '#/create') profileForm(null);
     else if (hash === '#/edit') {
       const od = await Store.ownerData().catch(() => null);
@@ -468,6 +655,9 @@
     else if (hash === '#/dashboard') dashboard();
     else if (hash === '#/print') printView();
     else if (hash === '#/about') about();
+    else if (hash === '#/safety') safetyPage();
+    else if (hash === '#/privacy') privacyPage();
+    else if (hash === '#/judges') judgesPage();
     else landing();
     window.scrollTo(0, 0);
   }
