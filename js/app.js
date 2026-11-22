@@ -3,7 +3,7 @@
 (function () {
   const app = document.getElementById('app');
   // Judges' demo tag (synthetic data). Filled in once the demo tag exists.
-  const DEMO_CODE = '';
+  const DEMO_CODE = 'KUWZCBA2H8WQ';
   const BLOOD = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Not known'];
   const t = k => window.I18N.t(k);
 
