@@ -105,13 +105,14 @@ legend{font-weight:700;padding:0 6px;color:var(--ink)}
 .pill-pending{background:var(--blue-tint);color:var(--blue-dark)}
 ul.tight{margin:8px 0;padding-left:22px}
 ul.tight li{margin:6px 0}
-footer.foot{max-width:640px;margin:28px auto 0;padding:14px 16px 18px;color:var(--muted);font-size:14px;line-height:1.55;text-align:center;background:var(--card);border-top:1px solid var(--line)}
+footer.foot{max-width:640px;margin:28px auto 0;padding:13px 16px 17px;color:var(--muted);font-size:14px;line-height:1.55;text-align:center;background:var(--card);border-top:1px solid var(--line)}
 footer.foot a{color:var(--care)}
-.foot-logo{justify-content:center;font-size:19px;margin-bottom:2px}
+.foot-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.foot-logo{font-size:19px}
 .foot-logo .logo-mark{width:23px;height:23px;border-radius:6px}
 .foot-logo .logo-mark svg{width:14px;height:14px}
-.foot-tag{margin:0 0 7px;font-weight:600;color:var(--ink);font-size:13.5px;letter-spacing:.2px}
-.foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0 0 7px}
+.foot-tag{margin:0;font-weight:600;color:var(--ink);font-size:13.5px;letter-spacing:.2px;text-align:right}
+.foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:3px 18px;margin:0 0 6px}
 .foot-links a{font-weight:600;text-decoration:none;font-size:14.5px}
 .foot-links a:hover{text-decoration:underline}
 .foot-copy{font-size:12px;margin:0}
