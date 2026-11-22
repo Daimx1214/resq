@@ -11,14 +11,21 @@
 </head>
 <body>
 <header class="top">
-  <a class="logo" href="#/">Res<span class="tag-dot">Q</span></a>
+  <a class="logo" href="#/"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="#fff"/></svg></span>Res<span class="tag-dot">Q</span></a>
   <button class="lang-btn" id="langBtn" type="button">اردو</button>
 </header>
 <main class="wrap" id="app" aria-live="polite"></main>
 <footer class="foot">
-  <p>ResQ is a prototype built for SafeSpace Hacks 2026. It is not a replacement for emergency services. In an emergency, call <b>1122</b> (Pakistan) or your local emergency number first.</p>
-  <p><a href="#/about">How it works, and the risks we found</a> · <a href="#/safety">Safety</a> · <a href="#/privacy">Privacy</a> · <a href="#/judges">For judges</a></p>
-  <p>Built with AI assistance from Claude (Muse). QR library MIT licensed. Demo data is synthetic.</p>
+  <a class="logo foot-logo" href="#/"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="#fff"/></svg></span>Res<span class="tag-dot">Q</span></a>
+  <nav class="foot-links">
+    <a href="#/about">How it works &amp; risks</a>
+    <a href="#/safety">Safety</a>
+    <a href="#/privacy">Privacy</a>
+    <a href="#/judges">For judges</a>
+  </nav>
+  <p class="foot-note">ResQ is a prototype built for SafeSpace Hacks 2026. It is not a replacement for emergency services. In an emergency, call <b>1122</b> (Pakistan) or your local emergency number first.</p>
+  <p class="foot-credit">Built with AI assistance from Claude (Muse). QR library MIT licensed. Demo data is synthetic.</p>
+  <p class="foot-copy">© 2026 ResQ</p>
 </footer>
 <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }</script>
 <script src="js/qrcode.js"></script>
