@@ -1,12 +1,14 @@
-/* ResQ design system: "Reflective Night Road"
-   night navy (the road), high-vis amber (reflective strips), rescue red
-   (emergency + identity), care teal (trust + links). Warm paper, no gradients. */
+/* ResQ design system: "Rescue Red, Blue and White"
+   The colours of emergency itself: rescue red for danger and identity,
+   deep-to-bright blues for trust and action, clean white space.
+   Every colour in the app comes from the red / blue / white families. */
 :root{
-  --ink:#0E1B2C; --muted:#43505F; --paper:#F7F3EC; --card:#ffffff;
-  --red:#D7263D; --red-dark:#A8182B; --green:#2E7D4F; --amber:#D98200;
-  --hivis:#FFB000; --care:#0B6E6A; --care-tint:#E3F1EF;
-  --blue:#14304D; --line:#DDD5C7; --radius:14px;
-  --shadow:0 1px 2px rgba(27,31,36,.08);
+  --ink:#0B2440; --muted:#47617E; --paper:#F4F8FC; --card:#ffffff;
+  --red:#D92323; --red-dark:#A81515; --red-bright:#F04438; --green:#1F7A4D;
+  --blue:#0B5ED7; --blue-dark:#0A4DAD; --blue-deep:#0B2440; --blue-tint:#E7F0FB;
+  --care:#0B5ED7; --care-tint:#E7F0FB;
+  --line:#CFE0EF; --radius:14px;
+  --shadow:0 1px 2px rgba(11,36,64,.08);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -34,7 +36,7 @@ input,select,textarea{width:100%;font-size:18px;padding:12px;border:1px solid va
 textarea{min-height:84px}
 :focus-visible{outline:3px solid var(--care);outline-offset:2px}
 .hint{font-size:15px;color:var(--muted);margin-top:4px}
-.warn{background:#FFF3D1;border:1px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:16px;margin:12px 0}
+.warn{background:var(--blue-tint);border:1px solid var(--blue);border-radius:10px;padding:12px 14px;font-size:16px;margin:12px 0}
 .danger-note{background:#fdeceb;border:1px solid var(--red);border-radius:10px;padding:12px 14px;font-size:16px;margin:12px 0}
 .ok-note{background:#e9f7ef;border:1px solid var(--green);border-radius:10px;padding:12px 14px;font-size:16px;margin:12px 0}
 .blood{font-size:84px;font-weight:800;color:var(--red);line-height:1}
@@ -48,12 +50,12 @@ textarea{min-height:84px}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700}
 .pill-active{background:#e9f7ef;color:var(--green)}
 .pill-revoked{background:#fdeceb;color:var(--red)}
-.pill-pending{background:#FFF3D1;color:#8a5c00}
+.pill-pending{background:var(--blue-tint);color:var(--blue-dark)}
 ul.tight{margin:8px 0;padding-left:22px}
 ul.tight li{margin:6px 0}
 footer.foot{max-width:640px;margin:24px auto 0;padding:0 16px 40px;color:var(--muted);font-size:15px;text-align:center}
 footer.foot a{color:var(--care)}
-.stripe{height:8px;background:repeating-linear-gradient(45deg,var(--hivis) 0 16px,var(--ink) 16px 32px);border-radius:4px;margin:18px 0}
+.stripe{height:8px;background:repeating-linear-gradient(45deg,var(--red) 0 16px,var(--blue) 16px 32px);border-radius:4px;margin:18px 0}
 [dir="rtl"]{text-align:right}
 .urdu{font-family:"Noto Nastaliq Urdu",system-ui,sans-serif;line-height:2}
 input[type="radio"],input[type="checkbox"]{width:22px;height:22px;vertical-align:-4px;margin-right:8px}
@@ -72,27 +74,26 @@ details.risk summary{font-weight:700;cursor:pointer}
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --ink:#F4EFE6; --muted:#A7B3C2; --paper:#0A1320; --card:#14233A;
-    --line:#27384F; --red:#FF5468; --care:#4FC3BB; --care-tint:#123;
-    --blue:#2b4d78;
+    --ink:#EFF6FF; --muted:#9DB8D2; --paper:#07182B; --card:#0D2A47;
+    --line:#274a6e; --red:#FF6B61; --care:#6FA8FF; --care-tint:#0d2c4d; --blue:#2E7BE6; --blue-dark:#6FA8FF; --blue-tint:#0d2c4d;
   }
   input,select,textarea{background:#0f1c2e;color:var(--ink)}
-  .warn{background:#2a2113}.ok-note{background:#12291c}.danger-note{background:#2c1518}
+  .warn{background:#0d2c4d}.ok-note{background:#12291c}.danger-note{background:#2c1518}
   .vs-yes{background:#12291c}.vs-no{background:#2c1518}
-  .pill-active{background:#12291c}.pill-revoked{background:#2c1518}.pill-pending{background:#2a2113;color:var(--hivis)}
+  .pill-active{background:#12291c}.pill-revoked{background:#2c1518}.pill-pending{background:#0d2c4d;color:#9CC2FF}
 }
 @media print{
   body{background:#fff;color:#000}
   header.top,footer.foot,.no-print,.stripe{display:none !important}
   .wrap{max-width:none;padding:0}
 }
-/* Printable sticker: amber band on top, QR in the middle, name + blood below */
-.sticker{border:3px solid var(--ink);border-radius:18px;padding:0 18px 18px;text-align:center;background:#fff;color:#0E1B2C;max-width:420px;margin:0 auto;overflow:hidden}
-.sticker .s-band{background:var(--hivis);color:#0E1B2C;margin:0 -18px;padding:12px 10px 8px}
+/* Printable sticker: red band on top, QR in the middle, name + blood below */
+.sticker{border:3px solid var(--ink);border-radius:18px;padding:0 18px 18px;text-align:center;background:#fff;color:#0B2440;max-width:420px;margin:0 auto;overflow:hidden}
+.sticker .s-band{background:var(--red);color:#fff;margin:0 -18px;padding:12px 10px 8px}
 .sticker .s-title{font-weight:800;font-size:20px;letter-spacing:.4px}
 .sticker .s-name{font-size:24px;font-weight:800;margin-top:8px}
-.sticker .s-blood{font-size:30px;font-weight:800;color:#D7263D}
-.sticker .s-code{font-size:14px;color:#43505F;letter-spacing:2px}
+.sticker .s-blood{font-size:30px;font-weight:800;color:#D92323}
+.sticker .s-code{font-size:14px;color:#47617E;letter-spacing:2px}
 @media print{
   .sticker{page-break-inside:avoid}
 }
