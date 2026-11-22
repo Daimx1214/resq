@@ -107,6 +107,7 @@ ul.tight{margin:8px 0;padding-left:22px}
 ul.tight li{margin:6px 0}
 footer.foot{max-width:640px;margin:28px auto 0;padding:13px 16px 17px;color:var(--muted);font-size:14px;line-height:1.55;text-align:center;background:var(--card);border-top:1px solid var(--line)}
 footer.foot a{color:var(--care)}
+footer.foot a.foot-logo{color:var(--ink)}
 .foot-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;padding:0 10px}
 .foot-logo{font-size:22px}
 .foot-logo .logo-mark{width:27px;height:27px;border-radius:7px}
