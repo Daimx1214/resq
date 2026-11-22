@@ -140,7 +140,7 @@ shots/                Screenshots used above
 
 ## Credits
 
-Designed and built by Daim Ali for SafeSpace Hacks 2026, with AI assistance from Claude (Muse), credited here as the event rules require. All demo data in screenshots and tests is synthetic.
+Designed and built by Daim Ali for SafeSpace Hacks 2026. All demo data in screenshots and tests is synthetic.
 
 ## License
 
