@@ -33,13 +33,13 @@ Key answers, in short:
 
 ## Honest limitations of this prototype
 
-- Profiles are stored on the owner's device in this build (localStorage), so a scan resolves where the tag data is available. The production design moves tag records to a small server under the same privacy rules; the data layer in `js/store.js` is written behind an interface for exactly that swap.
+- Contact numbers are protected by the unguessable tag code and are only fetched after the emergency gate; a determined technical attacker who already knows a code could query the database directly. The production design closes this with a small calling relay so numbers never leave the server.
 - Alerts in this build are the scan log in the owner's dashboard plus the bystander's call buttons. SMS alerts need a paid gateway and are a roadmap item, not a claim.
 - ResQ is a prototype. It is not a replacement for emergency services, and it says so on every screen.
 
 ## Tech
 
-Plain HTML, CSS and JavaScript. No framework, no build step, no external requests: the QR library (`js/qrcode.js`, MIT, by Kazuhiko Arase) is vendored, and everything else is hand-written. Works offline after the first load (service worker, network-first).
+Plain HTML, CSS and JavaScript. No framework, no build step. Firebase Authentication and Firestore (loaded from Google's CDN) hold accounts and tag records under strict security rules: public tag data is readable only by its random code, listing is denied everywhere, contact numbers live in a separate record fetched only after the gate, and the scan log is append-only for the public and readable only by the owner. The QR library (`js/qrcode.js`, MIT, by Kazuhiko Arase) is vendored. A service worker keeps the app shell available offline; the name and blood group inside the QR itself work with no network at all.
 
 ## Credits
 
