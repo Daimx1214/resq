@@ -105,15 +105,16 @@ legend{font-weight:700;padding:0 6px;color:var(--ink)}
 .pill-pending{background:var(--blue-tint);color:var(--blue-dark)}
 ul.tight{margin:8px 0;padding-left:22px}
 ul.tight li{margin:6px 0}
-footer.foot{max-width:640px;margin:36px auto 0;padding:26px 16px 34px;color:var(--muted);font-size:15px;line-height:1.7;text-align:center;background:var(--card);border-top:1px solid var(--line)}
+footer.foot{max-width:640px;margin:28px auto 0;padding:14px 16px 18px;color:var(--muted);font-size:14px;line-height:1.55;text-align:center;background:var(--card);border-top:1px solid var(--line)}
 footer.foot a{color:var(--care)}
-.foot-logo{justify-content:center;font-size:22px;margin-bottom:8px}
-.foot-logo .logo-mark{width:27px;height:27px}
-.foot-tag{margin:0 0 14px;font-weight:600;color:var(--ink);font-size:15px;letter-spacing:.2px}
-.foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 24px;margin:0 0 14px}
-.foot-links a{font-weight:600;text-decoration:none}
+.foot-logo{justify-content:center;font-size:19px;margin-bottom:2px}
+.foot-logo .logo-mark{width:23px;height:23px;border-radius:6px}
+.foot-logo .logo-mark svg{width:14px;height:14px}
+.foot-tag{margin:0 0 7px;font-weight:600;color:var(--ink);font-size:13.5px;letter-spacing:.2px}
+.foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:0 0 7px}
+.foot-links a{font-weight:600;text-decoration:none;font-size:14.5px}
 .foot-links a:hover{text-decoration:underline}
-.foot-copy{font-size:13px;margin:0}
+.foot-copy{font-size:12px;margin:0}
 [dir="rtl"]{text-align:right}
 .urdu{font-family:"Noto Nastaliq Urdu",system-ui,sans-serif;line-height:2}
 input[type="radio"],input[type="checkbox"]{width:22px;height:22px;vertical-align:-4px;margin-right:8px;accent-color:var(--blue)}
