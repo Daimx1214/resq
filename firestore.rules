@@ -1,0 +1,103 @@
+rules_version = '2';
+
+// Firestore security rules for project dulcet-metric-512419-s9.
+// Two apps share this project:
+//   * ClipForge  — users/{uid} + projects subcollection (owner/admin only)
+//   * LifeTag    — lifetag_tags / lifetag_contacts / lifetag_scans
+// LifeTag blocks were appended 22 Nov 2026 without changing any
+// ClipForge rule. The catch-all deny stays last.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email == 'daimx1212@gmail.com';
+    }
+
+    // True when an UPDATE keeps the privilege fields exactly as they
+    // are. Missing fields read as their defaults on both sides, so
+    // legacy/partial docs can't error the rule into a wrong answer.
+    function privilegeFieldsUnchanged() {
+      return request.resource.data.get('manualPro', false)
+          == resource.data.get('manualPro', false)
+        && request.resource.data.get('role', 'USER')
+          == resource.data.get('role', 'USER');
+    }
+
+    match /users/{uid} {
+      // Read: the owner, or the cloud admin.
+      allow get: if isOwner(uid) || isAdmin();
+      // No listing users for non-admins (the admin console list is
+      // admin-only; owners read their own doc directly).
+      allow list: if isAdmin();
+
+      // Create: only your own doc, and never with self-granted privilege.
+      allow create: if isOwner(uid)
+        && request.resource.data.get('manualPro', false) == false
+        && request.resource.data.get('role', 'USER') == 'USER';
+
+      // Update: the owner with privilege fields unchanged, or the admin
+      // (whose writes are how manualPro / role change at all).
+      allow update: if isAdmin()
+        || (isOwner(uid) && privilegeFieldsUnchanged());
+
+      // Delete: the owner deleting their own account, or the admin.
+      allow delete: if isOwner(uid) || isAdmin();
+
+      // Project metadata subcollection: the owner reads/writes their
+      // own; the admin reads everything (no admin writes here).
+      match /projects/{projectId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow write: if isOwner(uid);
+      }
+    }
+
+    // ---- LifeTag (SafeSpace Hacks 2026) ----
+    // Public tag records: readable by anyone who knows the unguessable
+    // random 12-character code (get only, never list). Writable only
+    // by the signed-in owner recorded on the tag.
+    match /lifetag_tags/{code} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isSignedIn()
+        && request.resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if isSignedIn()
+        && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Contact numbers live in their own document, fetched by the scan
+    // page only after the bystander passes the emergency gate. Same
+    // capability model as the tag: the random code is the key, listing
+    // is denied, writes are owner-only (checked against the tag doc).
+    match /lifetag_contacts/{code} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update, delete: if isSignedIn()
+        && get(/databases/$(database)/documents/lifetag_tags/$(code)).data.ownerUid
+            == request.auth.uid;
+    }
+
+    // Scan log: anyone may append an entry (a bystander scanning), and
+    // only the tag owner may read the entries for their own tag.
+    match /lifetag_scans/{scanId} {
+      allow create: if true;
+      allow get, list: if isSignedIn()
+        && resource.data.ownerUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Everything else: denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

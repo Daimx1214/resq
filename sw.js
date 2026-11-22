@@ -1,6 +1,6 @@
 // LifeTag service worker: network-first for the shell so updates land fast,
 // cache only as an offline fallback (lesson learned from LearnMate).
-const CACHE = 'lifetag-v1';
+const CACHE = 'resq-v1';
 const SHELL = ['./', './index.html', './css/styles.css', './js/qrcode.js', './js/store.js', './js/i18n.js', './js/app.js', './manifest.webmanifest'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

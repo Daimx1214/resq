@@ -1,8 +1,8 @@
-# LifeTag
+# ResQ
 
 **In case of accident, scan me.**
 
-LifeTag is a QR emergency tag for a motorcycle helmet or vehicle. If the rider is hurt and cannot speak, any bystander can scan the sticker to see the rider's blood group and reach their family in one tap.
+ResQ is a QR emergency tag for a motorcycle helmet or vehicle. If the rider is hurt and cannot speak, any bystander can scan the sticker to see the rider's blood group and reach their family in one tap.
 
 Built for **SafeSpace Hacks 2026** (Devpost), solo, by Daim Ali.
 
@@ -10,7 +10,7 @@ Built for **SafeSpace Hacks 2026** (Devpost), solo, by Daim Ali.
 
 In Pakistan, motorcycle accidents are an everyday event, and the first problem is rarely treatment. It is identity. An unconscious rider has no voice: nobody knows his blood group, his allergies, or who to call. Phones are locked. Wallets are missing. The golden hour is spent finding a name.
 
-## What LifeTag does
+## What ResQ does
 
 - A rider creates a 2-minute emergency profile: first name, blood group, allergies, conditions, and up to two family contacts. No CNIC, no home address, nothing else is ever asked.
 - The rider prints a sticker for the helmet or vehicle. The QR carries only the scan link plus, as plain text, the rider's first name and blood group, so the two most vital facts still work with no internet and no server.
@@ -21,7 +21,7 @@ In Pakistan, motorcycle accidents are an everyday event, and the first problem i
 
 ## Safety of the design itself
 
-Before building, we attacked the idea and wrote down 40 ways it could fail or be misused: sticker photographs used for accident scams, prank scans panicking families, wrong self-reported blood groups, sequential tag numbers being scraped, borrowed bikes, stolen helmets, bystanders who fear police involvement, and more. The design answers each one it can, and states plainly what it cannot fix. The app's About page carries the full list ("How LifeTag works, honestly").
+Before building, we attacked the idea and wrote down 40 ways it could fail or be misused: sticker photographs used for accident scams, prank scans panicking families, wrong self-reported blood groups, sequential tag numbers being scraped, borrowed bikes, stolen helmets, bystanders who fear police involvement, and more. The design answers each one it can, and states plainly what it cannot fix. The app's About page carries the full list ("How ResQ works, honestly").
 
 Key answers, in short:
 
@@ -35,7 +35,7 @@ Key answers, in short:
 
 - Profiles are stored on the owner's device in this build (localStorage), so a scan resolves where the tag data is available. The production design moves tag records to a small server under the same privacy rules; the data layer in `js/store.js` is written behind an interface for exactly that swap.
 - Alerts in this build are the scan log in the owner's dashboard plus the bystander's call buttons. SMS alerts need a paid gateway and are a roadmap item, not a claim.
-- LifeTag is a prototype. It is not a replacement for emergency services, and it says so on every screen.
+- ResQ is a prototype. It is not a replacement for emergency services, and it says so on every screen.
 
 ## Tech
 

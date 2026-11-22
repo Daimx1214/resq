@@ -1,15 +1,15 @@
-// LifeTag strings. English is complete; Urdu covers the public scan flow and
+// ResQ strings. English is complete; Urdu covers the public scan flow and
 // landing first, because the bystander at an accident scene matters most.
 (function () {
   const STR = {
     en: {
       hero_title: 'In case of accident, scan me.',
-      hero_lede: 'LifeTag is a small QR sticker for your helmet or vehicle. If you are hurt and cannot speak, any passer-by can scan it to see your blood group and reach your family.',
+      hero_lede: 'ResQ is a small QR sticker for your helmet or vehicle. If you are hurt and cannot speak, any passer-by can scan it to see your blood group and reach your family.',
       hero_point1: 'Your phone numbers are never printed on the sticker and never shown on screen.',
       hero_point2: 'The sticker itself carries only your first name and blood group, so it still helps with no internet.',
       hero_point3: 'Every emergency scan tells the family. False scans lock the tag down.',
-      cta_create: 'Create my LifeTag',
-      cta_have: 'I already have a LifeTag',
+      cta_create: 'Create my ResQ',
+      cta_have: 'I already have a ResQ',
       how_title: 'How it works',
       how_1: 'You make a 2-minute emergency profile: first name, blood group, allergies, and up to two family contacts. No CNIC, no home address, ever.',
       how_2: 'You print the sticker and put it on your helmet or vehicle.',
@@ -22,7 +22,7 @@
       gate_phone_label: 'Your phone number (so the family can call you back)',
       gate_phone_hint: 'Optional, but it helps the family reach the person who found their loved one.',
       gate_continue: 'Show emergency information',
-      looking_title: 'This is a LifeTag',
+      looking_title: 'This is a ResQ',
       looking_body: 'It belongs to a rider who wears it so strangers can help after an accident. No private information is shown without a real emergency. If someone here is hurt, go back and choose "Yes, it is an emergency".',
       emg_first_aid_1: 'Call 1122 first, or ask someone else to call.',
       emg_first_aid_2: 'Do not move the injured person. Do not remove the helmet.',
@@ -48,12 +48,12 @@
     },
     ur: {
       hero_title: 'Hadse ki surat mein, scan karo',
-      hero_lede: 'LifeTag tumhare helmet ya gaari ke liye aik chhota sa QR sticker hai. Agar tum zakhmi ho aur bol na sako, to koi bhi raahgeer use scan karke tumhara blood group dekh sakta hai aur tumhare ghar walon tak pahunch sakta hai.',
+      hero_lede: 'ResQ tumhare helmet ya gaari ke liye aik chhota sa QR sticker hai. Agar tum zakhmi ho aur bol na sako, to koi bhi raahgeer use scan karke tumhara blood group dekh sakta hai aur tumhare ghar walon tak pahunch sakta hai.',
       hero_point1: 'Tumhare phone number sticker par kabhi nahi chhapte aur screen par kabhi nazar nahi aate.',
       hero_point2: 'Sticker ke andar sirf tumhara pehla naam aur blood group hota hai, taake baghair internet ke bhi kaam aye.',
       hero_point3: 'Har emergency scan ki khabar khandan ko jati hai. Jhoota scan tag ko band kar deta hai.',
-      cta_create: 'Mera LifeTag banao',
-      cta_have: 'Mera LifeTag pehle se hai',
+      cta_create: 'Mera ResQ banao',
+      cta_have: 'Mera ResQ pehle se hai',
       how_title: 'Ye kaise kaam karta hai',
       how_1: 'Tum 2 minute mein emergency profile banate ho: pehla naam, blood group, allergy, aur zyada se zyada 2 khandan ke number. CNIC ya ghar ka pata kabhi nahi.',
       how_2: 'Sticker print karke helmet ya gaari par lagate ho.',
@@ -66,7 +66,7 @@
       gate_phone_label: 'Aap ka phone number (taake khandan aap ko wapas call kar sake)',
       gate_phone_hint: 'Ye lazmi nahi, lekin khandan ke liye madadgar hai.',
       gate_continue: 'Emergency maloomat dikhao',
-      looking_title: 'Ye aik LifeTag hai',
+      looking_title: 'Ye aik ResQ hai',
       looking_body: 'Ye aik sawaar ka tag hai taake hadse ke baad ajnabi madad kar saken. Asal emergency ke baghair koi zaati maloomat nahi dikhti. Agar yahan koi zakhmi hai to wapas ja kar "Haan, ye emergency hai" chunen.',
       emg_first_aid_1: 'Sab se pehle 1122 ko call karen, ya kisi aur se karwayen.',
       emg_first_aid_2: 'Zakhmi ko hargiz na hilayen. Helmet na utaren.',

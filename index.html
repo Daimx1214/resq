@@ -3,23 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LifeTag — In case of accident, scan me</title>
-<meta name="description" content="LifeTag is a QR emergency tag for your helmet or vehicle. If you are hurt and cannot speak, any bystander can scan it to see your blood group and reach your family. Your phone number is never printed and never shown.">
+<title>ResQ — In case of accident, scan me</title>
+<meta name="description" content="ResQ is a QR emergency tag for your helmet or vehicle. If you are hurt and cannot speak, any bystander can scan it to see your blood group and reach your family. Your phone number is never printed and never shown.">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
 <header class="top">
-  <a class="logo" href="#/">Life<span class="tag-dot">Tag</span></a>
+  <a class="logo" href="#/">Res<span class="tag-dot">Q</span></a>
   <button class="lang-btn" id="langBtn" type="button">اردو</button>
 </header>
 <main class="wrap" id="app" aria-live="polite"></main>
 <footer class="foot">
-  <p>LifeTag is a prototype built for SafeSpace Hacks 2026. It is not a replacement for emergency services. In an emergency, call <b>1122</b> (Pakistan) or your local emergency number first.</p>
+  <p>ResQ is a prototype built for SafeSpace Hacks 2026. It is not a replacement for emergency services. In an emergency, call <b>1122</b> (Pakistan) or your local emergency number first.</p>
   <p><a href="#/about">How it works, and the risks we found</a></p>
 </footer>
 <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }</script>
 <script src="js/qrcode.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/store.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
