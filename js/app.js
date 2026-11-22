@@ -38,6 +38,26 @@
     app.innerHTML = `
       <h1>${esc(t('hero_title'))}</h1>
       <p class="lede">${esc(t('hero_lede'))}</p>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 360 200" role="img">
+          <rect x="6" y="6" width="348" height="188" rx="20" class="ha-bg"/>
+          <path d="M6 166 Q110 150 190 164 T354 158 V194 H6 Z" class="ha-road"/>
+          <path d="M52 128 a52 52 0 0 1 104 0 z" class="ha-helmet"/>
+          <rect x="42" y="124" width="122" height="12" rx="6" class="ha-brim"/>
+          <rect x="85" y="90" width="40" height="40" rx="7" class="ha-qrbg"/>
+          <g class="ha-ink"><rect x="91" y="96" width="9" height="9"/><rect x="111" y="96" width="9" height="9"/><rect x="91" y="111" width="9" height="9"/><rect x="104" y="104" width="6" height="6"/><rect x="112" y="113" width="8" height="8"/></g>
+          <rect x="238" y="32" width="88" height="142" rx="15" class="ha-phone"/>
+          <rect x="248" y="48" width="68" height="94" rx="9" class="ha-screen"/>
+          <path d="M277 60 h10 v10 h10 v10 h-10 v10 h-10 v-10 h-10 v-10 h10 z" class="ha-cross"/>
+          <rect x="258" y="110" width="48" height="9" rx="4.5" class="ha-line"/>
+          <rect x="267" y="125" width="30" height="9" rx="4.5" class="ha-line2"/>
+          <rect x="258" y="150" width="48" height="14" rx="7" class="ha-call"/>
+          <rect x="198" y="50" width="4" height="106" rx="2" class="ha-beam"/>
+          <circle cx="200" cy="42" r="4" class="ha-dot"/>
+          <circle cx="222" cy="172" r="3" class="ha-dot2"/>
+        </svg>
+        <div class="hero-badges"><span>No app needed</span><span>Works offline</span><span>Number never printed</span></div>
+      </div>
       <div class="card">
         <ul class="tight">
           <li>${esc(t('hero_point1'))}</li>
@@ -48,10 +68,10 @@
       <a class="btn btn-rescue" href="#/create">${esc(t('cta_create'))}</a>
       <a class="btn" href="#/login">${esc(t('cta_have'))}</a>
       <h2>${esc(t('how_title'))}</h2>
-      <div class="card">
-        <p>1. ${esc(t('how_1'))}</p>
-        <p>2. ${esc(t('how_2'))}</p>
-        <p>3. ${esc(t('how_3'))}</p>
+      <div class="card steps">
+        <div class="step"><span class="step-n">1</span><p>${esc(t('how_1'))}</p></div>
+        <div class="step"><span class="step-n">2</span><p>${esc(t('how_2'))}</p></div>
+        <div class="step"><span class="step-n">3</span><p>${esc(t('how_3'))}</p></div>
       </div>
       <h2>What is on the sticker, and what is never on it</h2>
       <div class="vs-grid">
