@@ -56,7 +56,9 @@
       if (!pid) return null;
       const profile = this.listLocalProfiles().find(x => x.id === pid) || null;
       const tag = lread(LK.tags, []).find(x => x.profileId === pid) || null;
-      return profile && tag ? { profile, tag } : null;
+      if (!profile || !tag) return null;
+      const contacts = await this.getContacts(tag.code);
+      return { profile: Object.assign({}, profile, { contacts }), tag };
     },
     async getTag(code) {
       const tag = lread(LK.tags, []).find(x => x.code === String(code || '').toUpperCase()) || null;
