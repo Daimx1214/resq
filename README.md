@@ -13,6 +13,7 @@
 
 <p align="center">
   <a href="https://daimx1214.github.io/resq/"><b>Live App</b></a> ·
+  <a href="https://drive.google.com/file/d/1i81MQ481flqcpDqBmBggufC9ZSA-Rwpb/view?usp=drivesdk"><b>Watch the Demo Video</b></a> ·
   <a href="https://daimx1214.github.io/resq/#/t/KUWZCBA2H8WQ"><b>Try the Demo Tag</b></a> ·
   <a href="#screenshots">Screenshots</a> ·
   <a href="LICENSE">MIT License</a>
@@ -26,6 +27,7 @@
 
 ## Try it now
 
+- **Demo video (72 seconds):** https://drive.google.com/file/d/1i81MQ481flqcpDqBmBggufC9ZSA-Rwpb/view?usp=drivesdk
 - **Live app:** https://daimx1214.github.io/resq/
 - **Demo tag (synthetic rider "Ahmed", blood group B+):** https://daimx1214.github.io/resq/#/t/KUWZCBA2H8WQ
 - Scan the demo tag exactly as a bystander would: pass the emergency gate and you will see the blood group, allergy and condition info, and one-tap call buttons for two family contacts who each agreed to be listed. No phone number appears as text anywhere. That is the point.
